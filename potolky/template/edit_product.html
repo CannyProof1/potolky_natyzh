@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать товар - Натяжные потолки{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0"><i class="bi bi-pencil"></i> Редактирование товара</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('edit_product', product_id=product.id) }}" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Название товара *</label>
+                                <input type="text" class="form-control" id="title" name="title" required minlength="3" maxlength="100" value="{{ product.title }}">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Категория *</label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="Глянцевые" {% if product.category == 'Глянцевые' %}selected{% endif %}>Глянцевые</option>
+                                    <option value="Матовые" {% if product.category == 'Матовые' %}selected{% endif %}>Матовые</option>
+                                    <option value="Сатиновые" {% if product.category == 'Сатиновые' %}selected{% endif %}>Сатиновые</option>
+                                    <option value="Тканевые" {% if product.category == 'Тканевые' %}selected{% endif %}>Тканевые</option>
+                                    <option value="Фактурные" {% if product.category == 'Фактурные' %}selected{% endif %}>Фактурные</option>
+                                    <option value="Многоуровневые" {% if product.category == 'Многоуровневые' %}selected{% endif %}>Многоуровневые</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="material" class="form-label">Материал *</label>
+                                <select class="form-select" id="material" name="material" required>
+                                    <option value="ПВХ" {% if product.material == 'ПВХ' %}selected{% endif %}>ПВХ</option>
+                                    <option value="Ткань" {% if product.material == 'Ткань' %}selected{% endif %}>Ткань</option>
+                                    <option value="Стекловолокно" {% if product.material == 'Стекловолокно' %}selected{% endif %}>Стекловолокно</option>
+                                    <option value="Полиэстер" {% if product.material == 'Полиэстер' %}selected{% endif %}>Полиэстер</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Цена (руб.) *</label>
+                                <input type="number" class="form-control" id="price" name="price" required min="0" step="0.01" value="{{ product.price }}">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="texture" class="form-label">Текстура</label>
+                                <select class="form-select" id="texture" name="texture">
+                                    <option value="">Не указано</option>
+                                    <option value="Гладкая" {% if product.texture == 'Гладкая' %}selected{% endif %}>Гладкая</option>
+                                    <option value="Шероховатая" {% if product.texture == 'Шероховатая' %}selected{% endif %}>Шероховатая</option>
+                                    <option value="Тисненая" {% if product.texture == 'Тисненая' %}selected{% endif %}>Тисненая</option>
+                                    <option value="Перламутровая" {% if product.texture == 'Перламутровая' %}selected{% endif %}>Перламутровая</option>
+                                    <option value="Сатиновая" {% if product.texture == 'Сатиновая' %}selected{% endif %}>Сатиновая</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="color" class="form-label">Цвет</label>
+                                <input type="text" class="form-control" id="color" name="color" value="{{ product.color or '' }}">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="size" class="form-label">Размеры</label>
+                                <input type="text" class="form-control" id="size" name="size" value="{{ product.size or '' }}">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Новое изображение</label>
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                                <small class="text-muted">Оставьте пустым, чтобы сохранить текущее изображение</small>
+                                {% if product.image_url %}
+                                <div class="mt-2">
+                                    <img src="{{ url_for('static', filename=product.image_url) }}" alt="{{ product.title }}" style="max-height: 100px;">
+                                    <small class="d-block text-muted">Текущее изображение</small>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Описание *</label>
+                        <textarea class="form-control" id="description" name="description" rows="5" required minlength="10">{{ product.description }}</textarea>
+                    </div>
+                    
+                    {% if not product.is_approved %}
+                    <div class="alert alert-warning">
+                        <i class="bi bi-clock"></i>
+                        <strong>На модерации!</strong> После редактирования товар снова будет отправлен на проверку администратору.
+                    </div>
+                    {% endif %}
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-warning btn-lg">
+                            <i class="bi bi-save"></i> Сохранить изменения
+                        </button>
+                        <a href="{{ url_for('seller_dashboard') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Отмена
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

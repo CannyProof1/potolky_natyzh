@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Главная - Натяжные потолки{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded mb-4">
+    <h1 class="display-4">Добро пожаловать в мир натяжных потолков!</h1>
+    <p class="lead">Качественные натяжные потолки от производителя. Широкий выбор материалов и текстур.</p>
+    <hr class="my-4">
+    <p>Изучите наш каталог и выберите идеальный вариант для вашего интерьера.</p>
+    <a class="btn btn-primary btn-lg" href="{{ url_for('products') }}" role="button">Перейти в каталог</a>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-grid display-4 text-primary"></i>
+                <h5 class="card-title">Широкий выбор</h5>
+                <p class="card-text">Более 100 видов текстур и цветов на любой вкус</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-shield-check display-4 text-primary"></i>
+                <h5 class="card-title">Гарантия качества</h5>
+                <p class="card-text">Сертифицированные материалы европейского производства</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-clock-history display-4 text-primary"></i>
+                <h5 class="card-title">Быстрый монтаж</h5>
+                <p class="card-text">Установка в течение 1-2 дней с полной гарантией</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2 class="mt-5 mb-4">Популярные товары</h2>
+<div class="row">
+    {% for product in products[:6] %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            {% if product.image_url %}
+            <img src="{{ url_for('static', filename=product.image_url) }}" class="card-img-top" alt="{{ product.title }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+            <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                <span class="text-white">Нет изображения</span>
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ product.title }}</h5>
+                <p class="card-text">{{ product.description[:100] }}...</p>
+                <p class="card-text"><strong>{{ product.price }} руб.</strong></p>
+                <p class="card-text"><small class="text-muted">{{ product.material }} | {{ product.category }}</small></p>
+                <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn btn-primary">Подробнее</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="alert alert-info">Товары пока не добавлены. Зайдите позже!</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
