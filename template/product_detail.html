@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.title }} - Натяжные потолки{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        {% if product.image_url %}
+        <img src="{{ url_for('static', filename=product.image_url) }}" class="img-fluid rounded" alt="{{ product.title }}">
+        {% else %}
+        <div class="bg-secondary d-flex align-items-center justify-content-center rounded" style="height: 400px;">
+            <span class="text-white display-6">Нет изображения</span>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <h1>{{ product.title }}</h1>
+        <p class="text-muted">Категория: {{ product.category }}</p>
+        <h3 class="text-primary">{{ product.price }} руб.</h3>
+        
+        <div class="mt-4">
+            <h5>Характеристики:</h5>
+            <ul class="list-unstyled">
+                <li><strong>Материал:</strong> {{ product.material }}</li>
+                {% if product.texture %}
+                <li><strong>Текстура:</strong> {{ product.texture }}</li>
+                {% endif %}
+                {% if product.color %}
+                <li><strong>Цвет:</strong> {{ product.color }}</li>
+                {% endif %}
+                {% if product.size %}
+                <li><strong>Размер:</strong> {{ product.size }}</li>
+                {% endif %}
+            </ul>
+        </div>
+        
+        <div class="mt-4">
+            <h5>Описание:</h5>
+            <p>{{ product.description }}</p>
+        </div>
+        
+        {% if current_user.is_authenticated and current_user.role == 'customer' %}
+        <div class="mt-4">
+            <form action="{{ url_for('request_product', product_id=product.id) }}" method="POST">
+                <div class="mb-3">
+                    <label for="message" class="form-label">Оставить запрос продавцу</label>
+                    <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Отправить запрос</button>
+            </form>
+        </div>
+        {% elif not current_user.is_authenticated %}
+        <div class="alert alert-info mt-4">
+            <a href="{{ url_for('login') }}">Войдите</a> или <a href="{{ url_for('register') }}">зарегистрируйтесь</a>, чтобы оставить запрос
+        </div>
+        {% endif %}
+        
+        {% if current_user.is_authenticated and current_user.role == 'seller' and product.seller_id == current_user.id %}
+        <div class="mt-4">
+            <a href="{{ url_for('edit_product', product_id=product.id) }}" class="btn btn-warning">Редактировать</a>
+            <a href="{{ url_for('delete_product', product_id=product.id) }}" class="btn btn-danger" onclick="return confirm('Удалить товар?')">Удалить</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Запрос на товар - Натяжные потолки{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="bi bi-chat"></i> Запрос на товар</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h5>Товар: {{ product.title }}</h5>
+                    <p class="text-muted">Цена: {{ product.price }} руб.</p>
+                    <p class="text-muted">Продавец: {{ product.seller.username }}</p>
+                </div>
+                
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Ваше сообщение продавцу *</label>
+                        <textarea class="form-control" id="message" name="message" rows="5" required 
+                                  placeholder="Опишите, что вас интересует, задайте вопросы по товару..."></textarea>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="bi bi-send"></i> Отправить запрос
+                        </button>
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Вернуться к товару
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
